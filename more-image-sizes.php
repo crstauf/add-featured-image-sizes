@@ -25,6 +25,7 @@ class css_mis {
 			'post_parent', // post's parent
 			'post_format',
 			'post_type',
+			'post_thumbnail', // more-post-thumbnail ID
 		);
 
 		self::hooks();
@@ -63,10 +64,10 @@ class css_mis {
 		add_action('wp_ajax_set-post-thumbnail',array(__CLASS__,'generate'),1);
 	}
 
-	public static function generate($thumbnail_id = false,$size = false,$post_id = false) {
+	public static function generate($thumbnail_id = false,$size = false,$post_id = false,$more_id = false) {
 		if (false === $post_id && isset($_POST['post_id'])) {
 			$post_id = intval($_POST['post_id']);
-			if (false !== $size) $size = get_post_type($post_id);
+			//if (false !== $size) $size = get_post_type($post_id);
 		}
 
 		if (!$thumbnail_id) $thumbnail_id = intval($_POST['thumbnail_id']);
@@ -79,7 +80,7 @@ class css_mis {
 		$dir = substr($path,0,strrpos($path,'/'));
 
 		if (false !== $size && isset(self::$sizes->$size)) $sizes = self::$sizes->$size;
-		else $sizes = self::get_sizes($post_id);
+		else $sizes = self::get_sizes($post_id,$more_id);
 
 		foreach ($sizes as $name) {
 			$size = self::$sizes->$name;
@@ -102,7 +103,7 @@ class css_mis {
 		return true;
 	}
 
-		public static function get_sizes($post_id) {
+		public static function get_sizes($post_id,$more_id = false) {
 			$post = get_post($post_id);
 			$matches = array();
 
@@ -114,6 +115,7 @@ class css_mis {
 							if (!$meta = get_post_meta($post_id,'_wp_page_template',true)) $fail = true;
 							if ($meta != $value) $fail = true;
 						} else if ('post_format' == $criteria && get_post_format($post) != $value) $fail = true;
+						else if ('post_thumbnail' == $criteria && $more_id != $value) $fail = true;
 						else if (isset($post->$criteria) && $post->$criteria != $value) $fail = true;
 						if (true === $fail) break;
 					}
