@@ -25,6 +25,7 @@ class add_featured_image_sizes {
 	}
 
 	public static function add($w,$h,$crop,$name,$criteria = false,$and = '') {
+		if (!is_admin()) return;
 		/*$criteria = array(
 			'post_id'				=> 0,		// post ID
 			'post_name'				=> '',		// slug
