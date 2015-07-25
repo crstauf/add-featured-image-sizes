@@ -104,7 +104,7 @@ class add_featured_image_sizes {
 		$dir = substr($path,0,strrpos($path,'/'));
 
 		if (false !== $size) $sizes = array($size);
-		else $sizes = self::get_sizes($post_id);
+		else $sizes = apply_filters('featured_image_sizes_sizes',self::get_sizes($post_id),$thumbnail_id,$post_id,$size);
 
 		foreach ($sizes as $name) {
 			$size = self::$sizes->$name;
@@ -146,7 +146,7 @@ class add_featured_image_sizes {
 			'post_type',
 		)) as $criteria)
 			if (property_exists(self::$criterias->or,$criteria))
-				$$criteria = apply_filters('featured_image_size_post_data',self::get_post_data($criteria,$post));
+				$$criteria = apply_filters('featured_image_size_post_data',self::get_post_data($criteria,$post),$criteria,$post);
 
 		$return = array();
 
