@@ -8,7 +8,8 @@ Author: Caleb Stauffer
 Author URI: http://www.calebstauffer.com
 */
 
-new add_featured_image_sizes;
+if (is_admin()) new add_featured_image_sizes;
+
 class add_featured_image_sizes {
 
 	public static $sizes = false;
