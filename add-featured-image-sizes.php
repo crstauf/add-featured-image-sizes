@@ -227,5 +227,8 @@ class add_featured_image_sizes {
 
 }
 
+function add_featured_image_size($w,$h,$c,$name,$criteria = false,$and = '') {
+	add_featured_image_sizes::add($w,$h,$c,$name,$criteria,$and);
+}
 
 ?>
