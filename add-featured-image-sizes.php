@@ -227,10 +227,5 @@ class add_featured_image_sizes {
 
 }
 
-add_featured_image_sizes::add(500,500,true,'postimg',array('post_ID' => 10,'post_type' => 'post','post_name' => 'test'));
-add_featured_image_sizes::add(499,500,true,'pageimg',array('post_type' => 'page'));
-add_featured_image_sizes::add(498,500,true,'childpage16img',array('post_type' => 'page','post_ancestor_name' => 'test-parent-page'));
-add_featured_image_sizes::add(497,500,true,'childpageimg',array('post_type' => 'page','post_ancestor' => true));
-add_featured_image_sizes::add(496,500,true,'parentpageimg',array('post_type' => 'page','post_ancestor' => false));
 
 ?>
