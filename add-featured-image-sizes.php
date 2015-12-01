@@ -87,7 +87,7 @@ class add_featured_image_sizes {
 
 	public static function generate_image_size($thumbnail_id = false,$size = false,$post_id = false) {
 		if (!count(self::$sizes)) return true;
-		
+
 		if (false === $post_id && array_key_exists('post_id',$_POST))
 			$post_id = intval($_POST['post_id']);
 
@@ -111,9 +111,9 @@ class add_featured_image_sizes {
 			$size = self::$sizes->$name;
 
 			if (
-				!isset($meta['sizes'][$name]) || 
-				$meta['sizes'][$name]['width'] != $size->width || 
-				$meta['sizes'][$name]['height'] != $size->height || 
+				!isset($meta['sizes'][$name]) ||
+				$meta['sizes'][$name]['width'] != $size->width ||
+				$meta['sizes'][$name]['height'] != $size->height ||
 				!file_exists($dir . '/' . $meta['sizes'][$name]['file'])
 			)
 				if ($newsize = image_make_intermediate_size($path,$size->width,$size->height,$size->crop)) {
@@ -165,15 +165,15 @@ class add_featured_image_sizes {
 							if ($v == $ancestor_name) break 2;
 					} else if (
 						(
-							'post_parent' == $k && 
+							'post_parent' == $k &&
 							(
-								(true === $v && !in_array($$k,array(0,''))) || 
+								(true === $v && !in_array($$k,array(0,''))) ||
 								(false === $v && in_array($$k,array(0,'')))
 							)
 						) || (
-							'post_ancestor' == $k && 
+							'post_ancestor' == $k &&
 							(
-								(true === $v && count($$k)) || 
+								(true === $v && count($$k)) ||
 								(false === $v && !count($$k))
 							)
 						)
