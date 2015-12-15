@@ -85,7 +85,7 @@ class add_featured_image_sizes {
 		else self::$criterias->and->$name = $criteria;
 	}
 
-	public static function generate_image_size($thumbnail_id = false,$size = false,$post_id = false) {
+	public static function generate_image_size($thumbnail_id = false,$size = false,$post_id = false,$overwrite = true) {
 		if (!count(self::$sizes)) return true;
 
 		if (false === $post_id && array_key_exists('post_id',$_POST))
@@ -115,12 +115,15 @@ class add_featured_image_sizes {
 				$meta['sizes'][$name]['width'] != $size->width ||
 				$meta['sizes'][$name]['height'] != $size->height ||
 				!file_exists($dir . '/' . $meta['sizes'][$name]['file'])
-			)
-				if ($newsize = image_make_intermediate_size($path,$size->width,$size->height,$size->crop)) {
+			) {
+				if (array_key_exists($size,$meta['sizes']) && file_exists($dir . '/' . $meta['sizes'][$name]['file']) && false === $overwrite)
+					continue;
+				else if ($newsize = image_make_intermediate_size($path,$size->width,$size->height,$size->crop)) {
 					$meta['sizes'][$name] = $newsize;
 					if (false !== $backupsizes)
 						$backupsizes[$name] = $newsize;
 				}
+			}
 		}
 
 		if ($meta !== $orig_meta)
