@@ -116,7 +116,7 @@ class add_featured_image_sizes {
 				$meta['sizes'][$name]['height'] != $size->height ||
 				!file_exists($dir . '/' . $meta['sizes'][$name]['file'])
 			) {
-				if (array_key_exists($size,$meta['sizes']) && file_exists($dir . '/' . $meta['sizes'][$name]['file']) && false === $overwrite)
+				if (array_key_exists($name,$meta['sizes']) && file_exists($dir . '/' . $meta['sizes'][$name]['file']) && false === $overwrite)
 					continue;
 				else if ($newsize = image_make_intermediate_size($path,$size->width,$size->height,$size->crop)) {
 					$meta['sizes'][$name] = $newsize;
