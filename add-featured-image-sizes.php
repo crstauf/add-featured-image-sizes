@@ -101,11 +101,17 @@ class add_featured_image_sizes {
 
 		$orig_meta = $meta = wp_get_attachment_metadata($thumbnail_id);
 		$orig_backupsizes = $backupsizes = get_post_meta($thumbnail_id,'_wp_attachment_backup_sizes',true);
-		$path = apply_filters('image_make_intermediate_size',get_attached_file($thumbnail_id));
+		$filename = get_attached_file($thumbnail_id);
+		$path = apply_filters('image_make_intermediate_size',$filename);
 		$dir = substr($path,0,strrpos($path,'/'));
 
 		if (false !== $size) $sizes = array($size);
 		else $sizes = apply_filters('featured_image_sizes_sizes',self::get_sizes($post_id),$thumbnail_id,$post_id,$size);
+
+		$upload_dir = wp_upload_dir();
+		$month = substr(dirname($filename),strrpos(dirname($filename),'/') + 1);
+		$year = substr(dirname(dirname($filename)),strrpos(dirname(dirname($filename)),'/') + 1);
+		$file = substr($filename,strpos($filename,'/') + 1);
 
 		foreach ($sizes as $name) {
 			$size = self::$sizes->$name;
@@ -117,6 +123,18 @@ class add_featured_image_sizes {
 				!file_exists($dir . '/' . $meta['sizes'][$name]['file'])
 			) {
 				if ($newsize = image_make_intermediate_size($path,$size->width,$size->height,$size->crop)) {
+					if ($newsize['width'] !== $size->width || $newsize['height'] !== $size->height) {
+						if (!file_exists($upload_dir['basedir'] . '/manually_adjust'))
+							mkdir($upload_dir['basedir'] . '/manually_adjust');
+						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year))
+							mkdir($upload_dir['basedir'] . '/manually_adjust/' . $year);
+						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month))
+							mkdir($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month);
+						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $file))
+							copy($filename,$upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $file);
+						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $newsize['file']))
+							copy(dirname($filename) . '/' . $newsize['file'],$upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $newsize['file']);
+					}
 					$meta['sizes'][$name] = $newsize;
 					if (false !== $backupsizes)
 						$backupsizes[$name] = $newsize;
