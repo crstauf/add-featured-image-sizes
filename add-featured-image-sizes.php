@@ -111,7 +111,7 @@ class add_featured_image_sizes {
 		$upload_dir = wp_upload_dir();
 		$month = substr(dirname($filename),strrpos(dirname($filename),'/') + 1);
 		$year = substr(dirname(dirname($filename)),strrpos(dirname(dirname($filename)),'/') + 1);
-		$file = substr($filename,strpos($filename,'/') + 1);
+		$file = substr($filename,strrpos($filename,'/') + 1);
 
 		foreach ($sizes as $name) {
 			$size = self::$sizes->$name;
