@@ -123,7 +123,7 @@ class add_featured_image_sizes {
 				!file_exists($dir . '/' . $meta['sizes'][$name]['file'])
 			) {
 				if ($newsize = image_make_intermediate_size($path,$size->width,$size->height,$size->crop)) {
-					if ($newsize['width'] !== $size->width || $newsize['height'] !== $size->height) {
+					if ($newsize['width'] != $size->width || $newsize['height'] != $size->height) {
 						if (!file_exists($upload_dir['basedir'] . '/manually_adjust'))
 							mkdir($upload_dir['basedir'] . '/manually_adjust');
 						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year))
