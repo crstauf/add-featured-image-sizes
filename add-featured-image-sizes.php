@@ -131,9 +131,9 @@ class add_featured_image_sizes {
 						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month))
 							mkdir($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month);
 						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $file))
-							copy($filename,$upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $file);
+							copy($filename,$upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $thumbnail_id . '-' . $file);
 						if (!file_exists($upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $newsize['file']))
-							copy(dirname($filename) . '/' . $newsize['file'],$upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $newsize['file']);
+							copy(dirname($filename) . '/' . $newsize['file'],$upload_dir['basedir'] . '/manually_adjust/' . $year . '/' . $month . '/' . $thumbnail_id . '-' . $newsize['file']);
 					}
 					$meta['sizes'][$name] = $newsize;
 					if (false !== $backupsizes)
