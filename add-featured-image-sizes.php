@@ -10,10 +10,14 @@ Author URI: http://www.calebstauffer.com
 
 if (is_admin()) new add_featured_image_sizes;
 
+add_filter('qmx/collect/before_output/imagesizes',array('add_featured_image_sizes','filter_qmx_collect_imagesizes'));
+
 class add_featured_image_sizes {
 
 	public static $sizes = false;
 	public static $criterias = false;
+
+	public static $qmx = false;
 
 	function __construct() {
 		self::$sizes = new stdClass();
@@ -21,10 +25,21 @@ class add_featured_image_sizes {
 		self::$criterias->and = new stdClass();
 		self::$criterias->or = new stdClass();
 
+		if (class_exists('CSSLLC_QMX_Collector_ImageSizes'))
+			self::$qmx = array();
+
 		add_action('wp_ajax_set-post-thumbnail',array(__CLASS__,'generate_image_size'),1);
 	}
 
 	public static function add($w,$h,$crop,$name,$criteria = false,$and = '') {
+		if (class_exists('CSSLLC_QMX_Collector_ImageSizes'))
+			self::$qmx[$name] = array(
+				'width' => $w,
+				'height' => $h,
+				'crop' => $crop,
+				'status' => 'AFIS',
+			);
+
 		if (!is_admin()) return;
 		/*$criteria = array(
 			'post_id'				=> 0,		// post ID
@@ -242,6 +257,19 @@ class add_featured_image_sizes {
 				return false;
 
 		}
+	}
+
+	public static function filter_qmx_collect_imagesizes($imagesizes) {
+		$temp = $imagesizes;
+		$last_size = array_pop($temp);
+		$num = $last_size[count($last_size) - 1]['num'] + 1;
+		foreach (self::$qmx as $name => $size) {
+			$size['origin'] = 'AFIS';
+			$size['num'] = $num++;
+			$imagesizes[$name][] = $size;
+		}
+
+		return $imagesizes;
 	}
 
 }
