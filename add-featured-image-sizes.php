@@ -25,14 +25,15 @@ class add_featured_image_sizes {
 		self::$criterias->and = new stdClass();
 		self::$criterias->or = new stdClass();
 
-		if (class_exists('CSSLLC_QMX_Collector_ImageSizes'))
+		if (class_exists('QMX_Collector_ImageSizes'))
 			self::$qmx = array();
 
 		add_action('wp_ajax_set-post-thumbnail',array(__CLASS__,'generate_image_size'),1);
+		add_action('save_post',array(__CLASS__,'action_save_post'),1);
 	}
 
 	public static function add($w,$h,$crop,$name,$criteria = false,$and = '') {
-		if (class_exists('CSSLLC_QMX_Collector_ImageSizes'))
+		if (class_exists('QMX_Collector_ImageSizes'))
 			self::$qmx[$name] = array(
 				'width' => $w,
 				'height' => $h,
@@ -111,7 +112,7 @@ class add_featured_image_sizes {
 		else if (!is_bool($thumbnail_id))
 			$thumbnail_id = intval($thumbnail_id);
 
-		if (!isset($thumbnail_id) || false === $thumbnail_id || -1 == $thumbnail_id)
+		if (empty($thumbnail_id) || -1 == $thumbnail_id )
 			return;
 
 		$orig_meta = $meta = wp_get_attachment_metadata($thumbnail_id);
@@ -165,6 +166,12 @@ class add_featured_image_sizes {
 
 		return true;
 	}
+
+		static function action_save_post( $post_id ) {
+			if ( !has_post_thumbnail( $post_id ) )
+				return;
+			self::generate_image_size( get_post_thumbnail_id( $post_id ) );
+		}
 
 	public static function get_sizes($post_id) {
 		$post = get_post($post_id);
